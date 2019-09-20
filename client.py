@@ -6,9 +6,11 @@ class Reqeust():
     def __init__(self):
         self.header = {"accept": "application/json",}
         self.params = {}
+        self.json = {}
         self.cookies = {}
         self.timeout = 3
         self.allow_redirection = False
+
 
     def add_header(self, key, value):
         self.header[key] = value
@@ -25,6 +27,9 @@ class Reqeust():
     def set_redirection_following(self, allowing):
         self.allow_redirection = allowing
 
+    def set_json(self, json_data):
+        self.json = json_data
+
     def base64(self, msg):
         return str(base64.urlsafe_b64encode(msg.encode("utf-8")), "utf-8")
 
@@ -35,7 +40,7 @@ class Reqeust():
             if method.lower() == "get":
                 self.response = requests.get(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies)
             elif method.lower() == "post":
-                self.response = requests.post(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies)
+                self.response = requests.post(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies, json=self.json)
             elif method.lower() == "delete":
                 self.response = requests.delete(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies)
             elif method.lower() == "patch":
@@ -61,7 +66,7 @@ class Reqeust():
         pprint.pprint(self.response.headers)
 
     def print_response(self):
-        if self.response.headers["Content-Type"] == "text/json":
+        if "/json" in self.response.headers["Content-Type"]:
             pprint.pprint(self.response.json())
             return self.response.json()
         else:
