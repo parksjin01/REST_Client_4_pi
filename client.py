@@ -25,33 +25,39 @@ class RestClient(requests.Request):
         self.headers = {"Cache-Control": "no-cache"}
 
     def set_headers(self, key, value):
-        if key.lower() in ["host", "token", "user-agent", "agent", "cache-control"]:
-            self.__set_immutable_headers(key, value)
+        if key.lower() in ["host", "token", "user-agent", "cache-control", "content-type", "content-length", "date"]:
+            print("[Warning] {} can't be setted with this funtion".format(key))
         else:
-            self.__set_mutable_headers(key, value)
+            try:
+                self.headers[key]
+                self.change_header(key, value)
+            except:
+                self.headers[key] = value
 
     def set_headers_with_dict(self, dictionary):
         for key, value in dictionary.items():
             self.set_headers(key, value)
 
     def set_headers_with_json(self, json):
-        json = json.loads(json)
-        for key, value in json.items():
-            self.set_headers(key, value)
+        self.set_headers_with_dict(json.loads(json))
 
-    def read_header(self, config):
-        with open(config, "r") as f:
-            data = json.load(f)
-
-        return data
+    def set_headers_with_file(self, filename):
+        try:
+            with open(filename, "r") as f:
+                config = f.read()
+                self.set_headers_with_json(config)
+        except json.JSONDecodeError as e:
+            print("[Warning] Your configuration file is not json or invalid json")
 
     def change_header(self, key, value):
-        if key.lower() not in ["host", "token", "user-agent", "agent", "cache-control"]:
-            self.__set_mutable_headers(key, value)
+        self.set_headers(key, value)
 
     def change_header_with_dict(self, dictionary):
-        for key, value in dictionary.items():
-            self.change_header(key, value)
+        self.set_headers_with_dict(dictionary)
+
+    def change_header_with_json(self, json):
+        self.set_headers_with_json(json)
+
     # def add_header(self, key, value):
     #     self.header[key] = value
     #
