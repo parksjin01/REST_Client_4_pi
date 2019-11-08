@@ -1,32 +1,57 @@
 import requests
+import json
 
 """
 Header
     - Mutable Header
         * Accept
         * Parameter         (Optional)
-        * Content-Type      (Optional)
-        * Content-Length    (Optional & Auto Gen)
         * Accept-Encoding   (Optional)
         * Extra             (Optional)
         
     - Immutable Header
         * Host
-        * Access Token  (Optional)
-        * User-Agent    (Optional)
-        * Date          (Optional & Auto Gen)
-        * Cache-Control (Optional & Auto Gen)
+        * User-Agent        (Optional)
+        * Access Token      (Optional & Auto Gen)
+        * Cache-Control     (Optional & Auto Gen)
+        * Content-Type      (Optional & Auto Gen)
+        * Content-Length    (Optional & Auto Gen)
+        * Date              (Optional & Auto Gen)
 """
 
 class RestClient(requests.Request):
     def __init__(self):
         super(RestClient, self).__init__()
-        self.mutable_headers = {}
-        self.immutable_headers = {}
-        self.headers = {}
+        self.headers = {"Cache-Control": "no-cache"}
 
+    def set_headers(self, key, value):
+        if key.lower() in ["host", "token", "user-agent", "agent", "cache-control"]:
+            self.__set_immutable_headers(key, value)
+        else:
+            self.__set_mutable_headers(key, value)
 
+    def set_headers_with_dict(self, dictionary):
+        for key, value in dictionary.items():
+            self.set_headers(key, value)
 
+    def set_headers_with_json(self, json):
+        json = json.loads(json)
+        for key, value in json.items():
+            self.set_headers(key, value)
+
+    def read_header(self, config):
+        with open(config, "r") as f:
+            data = json.load(f)
+
+        return data
+
+    def change_header(self, key, value):
+        if key.lower() not in ["host", "token", "user-agent", "agent", "cache-control"]:
+            self.__set_mutable_headers(key, value)
+
+    def change_header_with_dict(self, dictionary):
+        for key, value in dictionary.items():
+            self.change_header(key, value)
     # def add_header(self, key, value):
     #     self.header[key] = value
     #
