@@ -1,31 +1,62 @@
 import requests
+import json
 
 """
 Header
     - Mutable Header
         * Accept
         * Parameter         (Optional)
-        * Content-Type      (Optional)
-        * Content-Length    (Optional & Auto Gen)
         * Accept-Encoding   (Optional)
         * Extra             (Optional)
         
     - Immutable Header
         * Host
-        * Access Token  (Optional)
-        * User-Agent    (Optional)
-        * Date          (Optional & Auto Gen)
-        * Cache-Control (Optional & Auto Gen)
+        * User-Agent        (Optional)
+        * Access Token      (Optional & Auto Gen)
+        * Cache-Control     (Optional & Auto Gen)
+        * Content-Type      (Optional & Auto Gen)
+        * Content-Length    (Optional & Auto Gen)
+        * Date              (Optional & Auto Gen)
 """
 
 class RestClient(requests.Request):
     def __init__(self):
         super(RestClient, self).__init__()
-        self.mutable_headers = {}
-        self.immutable_headers = {}
-        self.headers = {}
+        self.headers = {"Cache-Control": "no-cache"}
 
+    def set_headers(self, key, value):
+        if key.lower() in ["host", "token", "user-agent", "cache-control", "content-type", "content-length", "date"]:
+            print("[Warning] {} can't be setted with this funtion".format(key))
+        else:
+            try:
+                self.headers[key]
+                self.change_header(key, value)
+            except:
+                self.headers[key] = value
 
+    def set_headers_with_dict(self, dictionary):
+        for key, value in dictionary.items():
+            self.set_headers(key, value)
+
+    def set_headers_with_json(self, json):
+        self.set_headers_with_dict(json.loads(json))
+
+    def set_headers_with_file(self, filename):
+        try:
+            with open(filename, "r") as f:
+                config = f.read()
+                self.set_headers_with_json(config)
+        except json.JSONDecodeError as e:
+            print("[Warning] Your configuration file is not json or invalid json")
+
+    def change_header(self, key, value):
+        self.set_headers(key, value)
+
+    def change_header_with_dict(self, dictionary):
+        self.set_headers_with_dict(dictionary)
+
+    def change_header_with_json(self, json):
+        self.set_headers_with_json(json)
 
     # def add_header(self, key, value):
     #     self.header[key] = value
