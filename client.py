@@ -22,10 +22,12 @@ Header
 class RestClient(requests.Request):
     def __init__(self):
         super(RestClient, self).__init__()
-        self.headers = {"Cache-Control": "no-cache"}
+        self.headers = {}
+        self.immutable_header_list = ["host", "user-agent", "access-token", "cache-control", "content-type",
+                                      "content-length", "date"]
 
-    def set_headers(self, key, value):
-        if key.lower() in ["host", "token", "user-agent", "cache-control", "content-type", "content-length", "date"]:
+    def set_header(self, key, value):
+        if key.lower() in self.immutable_header_list:
             print("[Warning] {} can't be setted with this funtion".format(key))
         else:
             try:
@@ -57,6 +59,19 @@ class RestClient(requests.Request):
 
     def change_header_with_json(self, json):
         self.set_headers_with_json(json)
+
+    def clear_header(self, header_name):
+        try:
+            del self.headers[header_name]
+        except:
+            print("[ERROR] {} is not in header".format(header_name))
+
+    def clear_all_header(self):
+        self.headers = {}
+
+    # Only for testing
+    def get_header(self):
+        return self.headers
 
     # def add_header(self, key, value):
     #     self.header[key] = value
