@@ -5,13 +5,14 @@ import json
 Header
     - Mutable Header
         * Accept
-        * Parameter         (Optional)
         * Accept-Encoding   (Optional)
         * Extra             (Optional)
         
     - Immutable Header
         * Host
         * User-Agent        (Optional)
+        * Parameter         (Optional)
+        * Data              (Optional)
         * Access Token      (Optional & Auto Gen)
         * Cache-Control     (Optional & Auto Gen)
         * Content-Type      (Optional & Auto Gen)
@@ -29,9 +30,10 @@ ERROR_CODE = {
 class RestClient(requests.Request):
     def __init__(self):
         super(RestClient, self).__init__()
-        self.headers = {}
         self.immutable_header_list = ["host", "user-agent", "access-token", "cache-control", "content-type",
-                                      "content-length", "date"]
+                                      "content-length", "date", "parameter", "param", "params", "data"]
+        self.session = requests.Session()
+        self.response = None
 
     def set_header(self, key, value):
         if key.lower() in self.immutable_header_list:
@@ -81,6 +83,39 @@ class RestClient(requests.Request):
     def get_header(self):
         return self.headers
 
+    def get(self, url=None, params=None):
+        self.method = "GET"
+        self.url = url
+        self.params = params
+        self.response = self.session.send(self.prepare())
+        return self.response
+
+    def post(self, url="", data=""):
+        self.method = "POST"
+        self.url = url
+        self.data = data
+        self.response = self.session.send(self.prepare())
+        return self.response
+
+    def put(self, url="", data=""):
+        self.method = "PUT"
+        self.url = url
+        self.data = data
+        self.response = self.session.send(self.prepare())
+        return self.response
+
+    def patch(self, url="", data=""):
+        self.method = "PATCH"
+        self.url = url
+        self.data = data
+        self.response = self.session.send(self.prepare())
+        return self.response
+
+    def delete(self, url=""):
+        self.method = "PATCH"
+        self.url = url
+        self.response = self.session.send(self.prepare())
+        return self.response
     # def add_header(self, key, value):
     #     self.header[key] = value
     #
