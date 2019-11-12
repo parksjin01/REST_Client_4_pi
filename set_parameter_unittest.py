@@ -10,9 +10,8 @@ class Header_Testcase(unittest.TestCase):
         self.client = RestClient()
 
         header = [
-            ("accept", "text/html"), ("parameter", "hello world"), ("parameter", "200OK"),
-            ("accept_encoding", "br"), ("accept_encoding", "gzip"), ("gid", 1), ("uid", "test"),
-            ("category", "amenity")
+            ("accept", "text/html"), ("accept_encoding", "br"), ("accept_encoding", "gzip"),
+            ("gid", 1), ("uid", "test"), ("category", "amenity")
         ]
 
         for header_name, header_value in header:
@@ -51,12 +50,10 @@ class Header_Testcase(unittest.TestCase):
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 },
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 }
             ),
             (
@@ -85,7 +82,6 @@ class Header_Testcase(unittest.TestCase):
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 }
             ),
             (
@@ -131,7 +127,6 @@ class Header_Testcase(unittest.TestCase):
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 }
             ),
             (
@@ -160,7 +155,6 @@ class Header_Testcase(unittest.TestCase):
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 }
             ),
             (
@@ -202,9 +196,8 @@ class Header_Testcase(unittest.TestCase):
         self.client = RestClient()
 
         header = [
-            ("accept", "text/html"), ("parameter", "hello world"), ("parameter", "200OK"),
-            ("accept_encoding", "br"), ("accept_encoding", "gzip"), ("gid", 1), ("uid", "test"),
-            ("category", "amenity")
+            ("accept", "text/html"), ("accept_encoding", "br"), ("accept_encoding", "gzip"),
+            ("gid", 1), ("uid", "test"), ("category", "amenity")
         ]
 
         header_length = len(header)
@@ -233,7 +226,6 @@ class Header_Testcase(unittest.TestCase):
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 }
             ),
             (
@@ -262,7 +254,6 @@ class Header_Testcase(unittest.TestCase):
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 }
             ),
             (
@@ -315,7 +306,6 @@ class Header_Testcase(unittest.TestCase):
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 }
             ),
             (
@@ -344,7 +334,6 @@ class Header_Testcase(unittest.TestCase):
                 {
                     "accept": "text/html",
                     "accept_encoding": "bz",
-                    "parameter": "200OK",
                 }
             ),
             (
