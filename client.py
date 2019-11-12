@@ -18,6 +18,13 @@ Header
         * Content-Length    (Optional & Auto Gen)
         * Date              (Optional & Auto Gen)
 """
+ERROR_NAME = {
+    "JSON_DECODE": 1
+}
+
+ERROR_CODE = {
+    1: json.JSONDecodeError
+}
 
 class RestClient(requests.Request):
     def __init__(self):
@@ -38,21 +45,22 @@ class RestClient(requests.Request):
 
     def set_headers_with_dict(self, dictionary):
         for key, value in dictionary.items():
-            self.set_headers(key, value)
+            self.set_header(key, value)
 
-    def set_headers_with_json(self, json):
-        self.set_headers_with_dict(json.loads(json))
-
-    def set_headers_with_file(self, filename):
+    def set_headers_with_json(self, json_data):
         try:
-            with open(filename, "r") as f:
-                config = f.read()
-                self.set_headers_with_json(config)
+            self.set_headers_with_dict(json.loads(json_data))
         except json.JSONDecodeError as e:
             print("[Warning] Your configuration file is not json or invalid json")
+            return ERROR_NAME["JSON_DECODE"]
+
+    def set_headers_with_file(self, filename):
+        with open(filename, "r") as f:
+            config = f.read()
+            self.set_headers_with_json(config)
 
     def change_header(self, key, value):
-        self.set_headers(key, value)
+        self.set_header(key, value)
 
     def change_header_with_dict(self, dictionary):
         self.set_headers_with_dict(dictionary)
