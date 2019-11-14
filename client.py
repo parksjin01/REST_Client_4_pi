@@ -1,5 +1,6 @@
 import requests
 import json
+import xml.etree.ElementTree as ElementTree
 
 """
 Header
@@ -34,6 +35,7 @@ class RestClient(requests.Request):
                                       "content-length", "date", "parameter", "param", "params", "data"]
         self.session = requests.Session()
         self.response = None
+        self.session_send_kwargs = {"timeout": 3, "allow_redirection": True}
 
     def set_header(self, key, value):
         if key.lower() in self.immutable_header_list:
@@ -83,96 +85,59 @@ class RestClient(requests.Request):
     def get_header(self):
         return self.headers
 
+    def set_timeout(self, limit=3):
+        self.session_send_kwargs["timeout"] = limit
+
+    def set_redirection(self, redirection_availability):
+        self.session_send_kwargs["allow_redirection"] = redirection_availability
+
+    def __parsing_from_json(self):
+        return self.response.json()
+
+    def __parsing_from_xml(self):
+        return ElementTree.fromstring(self.response.text())
+
+    def return_data(self):
+        if self.response.status_code // 100 == 2:
+            if "json" in self.response.headers["content-type"]:
+                return self.__parsing_from_json()
+
+            elif "xml" in self.response.headers["content-type"]:
+                return self.__parsing_from_xml()
+
+        else:
+            self.response.raise_for_status()
+
     def get(self, url=None, params=None):
         self.method = "GET"
         self.url = url
         self.params = params
-        self.response = self.session.send(self.prepare())
-        return self.response
+        self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
+        return self.return_data()
 
     def post(self, url="", data=""):
         self.method = "POST"
         self.url = url
         self.data = data
-        self.response = self.session.send(self.prepare())
-        return self.response
+        self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
+        return self.return_data()
 
     def put(self, url="", data=""):
         self.method = "PUT"
         self.url = url
         self.data = data
-        self.response = self.session.send(self.prepare())
-        return self.response
+        self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
+        return self.return_data()
 
     def patch(self, url="", data=""):
         self.method = "PATCH"
         self.url = url
         self.data = data
-        self.response = self.session.send(self.prepare())
-        return self.response
+        self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
+        return self.return_data()
 
     def delete(self, url=""):
         self.method = "PATCH"
         self.url = url
-        self.response = self.session.send(self.prepare())
-        return self.response
-    # def add_header(self, key, value):
-    #     self.header[key] = value
-    #
-    # def add_params(self, key, value):
-    #     self.params[key] = value
-    #
-    # def add_cookies(self, key, value):
-    #     self.cookies[key] = value
-    #
-    # def set_timeout(self, timeout):
-    #     self.timeout = timeout
-    #
-    # def set_redirection_following(self, allowing):
-    #     self.allow_redirection = allowing
-    #
-    # def set_json(self, json_data):
-    #     self.json = json_data
-    #
-    # def base64(self, msg):
-    #     return str(base64.urlsafe_b64encode(msg.encode("utf-8")), "utf-8")
-    #
-    # def send(self, url, method="GET"):
-    #     ret = 0
-    #
-    #     try:
-    #         if method.lower() == "get":
-    #             self.response = requests.get(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies)
-    #         elif method.lower() == "post":
-    #             self.response = requests.post(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies, json=self.json)
-    #         elif method.lower() == "delete":
-    #             self.response = requests.delete(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies)
-    #         elif method.lower() == "patch":
-    #             self.response = requests.patch(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies)
-    #         elif method.lower() == "put":
-    #             self.response = requests.put(url, headers=self.header, params=self.params, timeout=self.timeout, allow_redirects=self.allow_redirection, cookies=self.cookies)
-    #
-    #         self.response.raise_for_status()
-    #
-    #     except requests.exceptions.Timeout:
-    #         ret = 1
-    #
-    #     except requests.exceptions.HTTPError as err:
-    #         print(err)
-    #
-    # def check_redirection(self):
-    #     return len(self.response.history) > 1
-    #
-    # def get_redirection_list(self):
-    #     return self.response.history
-    #
-    # def print_header(self):
-    #     pprint.pprint(self.response.headers)
-    #
-    # def print_response(self):
-    #     if "/json" in self.response.headers["Content-Type"]:
-    #         pprint.pprint(self.response.json())
-    #         return self.response.json()
-    #     else:
-    #         pprint.pprint(self.response.content)
-    #         return self.response.content
+        self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
+        return self.return_data()
