@@ -1,0 +1,9 @@
+README.md
+setup.py
+RestClient4py/__init__.py
+RestClient4py/client.py
+RestClient4py.egg-info/PKG-INFO
+RestClient4py.egg-info/SOURCES.txt
+RestClient4py.egg-info/dependency_links.txt
+RestClient4py.egg-info/requires.txt
+RestClient4py.egg-info/top_level.txt
