@@ -105,6 +105,10 @@ class RestClient(requests.Request):
             elif "xml" in self.response.headers["content-type"]:
                 return self.__parsing_from_xml()
 
+            else:
+                body = self.response.content
+                return body.decode("utf-8") if type(body) == bytes else body
+
         else:
             self.response.raise_for_status()
 
