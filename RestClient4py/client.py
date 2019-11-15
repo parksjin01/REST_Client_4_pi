@@ -35,7 +35,7 @@ class RestClient(requests.Request):
                                       "content-length", "date", "parameter", "param", "params", "data"]
         self.session = requests.Session()
         self.response = None
-        self.session_send_kwargs = {"timeout": 3, "allow_redirection": True}
+        self.session_send_kwargs = {"timeout": 3, "allow_redirects": True}
 
     def set_header(self, key, value):
         if key.lower() in self.immutable_header_list:
@@ -89,7 +89,7 @@ class RestClient(requests.Request):
         self.session_send_kwargs["timeout"] = limit
 
     def set_redirection(self, redirection_availability):
-        self.session_send_kwargs["allow_redirection"] = redirection_availability
+        self.session_send_kwargs["allow_redirects"] = redirection_availability
 
     def __parsing_from_json(self):
         return self.response.json()
