@@ -31,7 +31,7 @@ ERROR_CODE = {
 class RestClient(requests.Request):
     def __init__(self):
         super(RestClient, self).__init__()
-        self.immutable_header_list = ["host", "user-agent", "access-token", "cache-control", "content-type",
+        self.immutable_header_list = ["host", "user-agent", "access-token", "cache-control",
                                       "content-length", "date", "parameter", "param", "params", "data"]
         self.session = requests.Session()
         self.response = None
@@ -119,29 +119,34 @@ class RestClient(requests.Request):
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def post(self, url="", data=""):
+    def post(self, url="", data="", json=""):
         self.method = "POST"
         self.url = url
         self.data = data
+        self.json = json
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def put(self, url="", data=""):
+    def put(self, url="", data="", json=""):
         self.method = "PUT"
         self.url = url
         self.data = data
+        self.json
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def patch(self, url="", data=""):
+    def patch(self, url="", data="", json=""):
         self.method = "PATCH"
         self.url = url
         self.data = data
+        self.json = json
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def delete(self, url=""):
+    def delete(self, url="", data="", json=""):
         self.method = "PATCH"
         self.url = url
+        self.data = data
+        self.json = json
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()

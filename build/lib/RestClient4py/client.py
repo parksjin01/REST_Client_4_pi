@@ -31,11 +31,11 @@ ERROR_CODE = {
 class RestClient(requests.Request):
     def __init__(self):
         super(RestClient, self).__init__()
-        self.immutable_header_list = ["host", "user-agent", "access-token", "cache-control", "content-type",
+        self.immutable_header_list = ["host", "user-agent", "access-token", "cache-control",
                                       "content-length", "date", "parameter", "param", "params", "data"]
         self.session = requests.Session()
         self.response = None
-        self.session_send_kwargs = {"timeout": 3, "allow_redirection": True}
+        self.session_send_kwargs = {"timeout": 3, "allow_redirects": True}
 
     def set_header(self, key, value):
         if key.lower() in self.immutable_header_list:
@@ -89,7 +89,7 @@ class RestClient(requests.Request):
         self.session_send_kwargs["timeout"] = limit
 
     def set_redirection(self, redirection_availability):
-        self.session_send_kwargs["allow_redirection"] = redirection_availability
+        self.session_send_kwargs["allow_redirects"] = redirection_availability
 
     def __parsing_from_json(self):
         return self.response.json()
@@ -105,6 +105,10 @@ class RestClient(requests.Request):
             elif "xml" in self.response.headers["content-type"]:
                 return self.__parsing_from_xml()
 
+            else:
+                body = self.response.content
+                return body.decode("utf-8") if type(body) == bytes else body
+
         else:
             self.response.raise_for_status()
 
@@ -115,29 +119,34 @@ class RestClient(requests.Request):
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def post(self, url="", data=""):
+    def post(self, url="", data="", json=""):
         self.method = "POST"
         self.url = url
         self.data = data
+        self.json = json
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def put(self, url="", data=""):
+    def put(self, url="", data="", json=""):
         self.method = "PUT"
         self.url = url
         self.data = data
+        self.json
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def patch(self, url="", data=""):
+    def patch(self, url="", data="", json=""):
         self.method = "PATCH"
         self.url = url
         self.data = data
+        self.json = json
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def delete(self, url=""):
+    def delete(self, url="", data="", json=""):
         self.method = "PATCH"
         self.url = url
+        self.data = data
+        self.json = json
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
