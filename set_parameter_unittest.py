@@ -1,5 +1,5 @@
 import unittest
-from client import RestClient
+from RestClient4py.client import RestClient
 import json
 import random
 import copy
