@@ -107,19 +107,22 @@ class RestClient(requests.Request):
 
             else:
                 body = self.response.content
-                return body.decode("utf-8") if type(body) == bytes else body
+                try:
+                    return body.decode("utf-8")
+                except:
+                    return body
 
         else:
             self.response.raise_for_status()
 
-    def get(self, url=None, params=None):
+    def get(self, url=None, params={}):
         self.method = "GET"
         self.url = url
         self.params = params
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def post(self, url="", data="", json=""):
+    def post(self, url="", data={}, json=""):
         self.method = "POST"
         self.url = url
         self.data = data
@@ -127,7 +130,7 @@ class RestClient(requests.Request):
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def put(self, url="", data="", json=""):
+    def put(self, url="", data={}, json=""):
         self.method = "PUT"
         self.url = url
         self.data = data
@@ -135,7 +138,7 @@ class RestClient(requests.Request):
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def patch(self, url="", data="", json=""):
+    def patch(self, url="", data={}, json=""):
         self.method = "PATCH"
         self.url = url
         self.data = data
@@ -143,7 +146,7 @@ class RestClient(requests.Request):
         self.response = self.session.send(self.prepare(), **self.session_send_kwargs)
         return self.return_data()
 
-    def delete(self, url="", data="", json=""):
+    def delete(self, url="", data={}, json=""):
         self.method = "PATCH"
         self.url = url
         self.data = data
