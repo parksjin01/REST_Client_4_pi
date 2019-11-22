@@ -99,7 +99,14 @@ class RestClient(requests.Request):
     def return_data(self):
         if self.response.status_code // 100 == 2:
             if "json" in self.response.headers["content-type"]:
-                return self.__parsing_from_json()
+                try:
+                    return self.__parsing_from_json()
+                except:
+                    body = self.response.content
+                    try:
+                        return body.decode("utf-8")
+                    except:
+                        return body
 
             elif "xml" in self.response.headers["content-type"]:
                 return self.__parsing_from_xml()

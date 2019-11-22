@@ -44,11 +44,7 @@ class RestClient(requests.Request):
         if key.lower() in self.immutable_header_list:
             print("[Warning] {} can't be setted with this funtion".format(key))
         else:
-            try:
-                self.headers[key]
-                self.change_header(key, value)
-            except:
-                self.headers[key] = value
+            self.headers[key] = value if type(value) == str else str(value)
 
     def set_headers_with_dict(self, dictionary):
         for key, value in dictionary.items():
@@ -103,7 +99,14 @@ class RestClient(requests.Request):
     def return_data(self):
         if self.response.status_code // 100 == 2:
             if "json" in self.response.headers["content-type"]:
-                return self.__parsing_from_json()
+                try:
+                    return self.__parsing_from_json()
+                except:
+                    body = self.response.content
+                    try:
+                        return body.decode("utf-8")
+                    except:
+                        return body
 
             elif "xml" in self.response.headers["content-type"]:
                 return self.__parsing_from_xml()

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "RestClient4py",
-    version = "1.0.11",
+    version = "1.0.12",
     description = "REST-API client for Python",
     author = "Damotorie",
     author_mail = "parksjin01@gmail.com",
