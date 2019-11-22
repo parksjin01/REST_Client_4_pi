@@ -44,11 +44,7 @@ class RestClient(requests.Request):
         if key.lower() in self.immutable_header_list:
             print("[Warning] {} can't be setted with this funtion".format(key))
         else:
-            try:
-                self.headers[key]
-                self.change_header(key, value)
-            except:
-                self.headers[key] = value
+            self.headers[key] = value if type(value) == str else str(value)
 
     def set_headers_with_dict(self, dictionary):
         for key, value in dictionary.items():
