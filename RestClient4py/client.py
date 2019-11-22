@@ -32,7 +32,7 @@ class RestClient(requests.Request):
     def __init__(self):
         super(RestClient, self).__init__()
         self.immutable_header_list = ["host", "user-agent", "access-token", "cache-control",
-                                      "content-length", "date", "parameter", "param", "params", "data"]
+                                      "date", "parameter", "param", "params", "data"]
         self.session = requests.Session()
         self.response = None
         self.params = {}
