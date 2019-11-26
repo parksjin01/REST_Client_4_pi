@@ -28,6 +28,20 @@ ERROR_CODE = {
     1: json.JSONDecodeError
 }
 
+def printJsonStructure(data, indent=0):
+
+    if type(data) not in [list, dict]:
+        return
+
+    if type(data) == list:
+        if len(data) > 0:
+            printJsonStructure(data[0], indent)
+
+    else:
+        for k in data.keys():
+            print(" |\t" * indent, k)
+            printJsonStructure(data[k], indent + 1)
+
 class RestClient(requests.Request):
     def __init__(self):
         super(RestClient, self).__init__()
