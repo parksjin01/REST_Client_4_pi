@@ -51,7 +51,7 @@ class RestClient(requests.Request):
         self.response = None
         self.params = {}
         self.data = {}
-        self.json = ""
+        self.json = None
         self.session_send_kwargs = {"timeout": 3, "allow_redirects": True}
 
     def set_header(self, key, value):
@@ -182,4 +182,4 @@ class RestClient(requests.Request):
         for k, v in self.headers.items():
             header += header_template.format(k, v)
 
-        return template.format(self.method, header.strip("\n"), json.dumps(self.params) + "\n" + json.dumps(self.data) + "\n" + self.json)
+        return template.format(self.method, header.strip("\n"), json.dumps(self.params) + "\n" + json.dumps(self.data) + "\n" + (self.json or ""))
